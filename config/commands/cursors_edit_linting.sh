@@ -3,7 +3,7 @@
 #   edit
 #   <replacement_text>
 #   end_of_edit
-# docstring: replaces *all* of the text between the START CURSOR and the END CURSOR with the replacement_text. The replacement text is terminated by a line with only end_of_edit on it. All of the <replacement_text> will be entered, so make sure your indentation is formatted properly. To enter text at the beginning of the file, set START CURSOR and END CURSOR to 0. Use set_cursors to move the cursors around. Python files will be checked for syntax errors after the edit.
+# docstring: replaces *all* of the text between the START CURSOR and the END CURSOR with the replacement_text. The replacement text is terminated by a line with only end_of_edit on it. All of the <replacement_text> will be entered, so make sure your indentation is formatted properly. To enter text at the beginning of the file, set START CURSOR and END CURSOR to 0. Use set_cursors to move the cursors around. Python and Java files will be checked for syntax errors after the edit.
 # end_name: end_of_edit
 # arguments:
 #   replacement_text:
@@ -38,6 +38,8 @@ edit() {
     # Run linter
     if [[ $CURRENT_FILE == *.py ]]; then
         lint_output=$(flake8 --isolated --select=F821,F822,F831,E111,E112,E113,E999,E902 "$CURRENT_FILE" 2>&1)
+    elif [[ $CURRENT_FILE == *.java ]]; then
+        lint_output=$(_java_linting "$CURRENT_FILE" 2>&1)
     else
         # do nothing
         lint_output=""

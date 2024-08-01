@@ -377,6 +377,8 @@ class SWEEnv(gym.Env):
             self.install_env()
         # Install mypy for linting purposes
         self.communicate_with_handling("pip install flake8", error_msg="Failed to install flake8 (lint library)")
+        # Install javac-parser for java linting purposes
+        self.communicate_with_handling("pip install javac-parser", error_msg="Failed to install javac-parser (java lint library)")
 
         if self.args.cache_task_images:
             envs = self.communicate("env")
@@ -641,7 +643,7 @@ class SWEEnv(gym.Env):
     def _communicate_experimental(
         self,
         input: str,
-        timeout_duration: int | float = 25,
+        timeout_duration: int | float = AGENT_ACTION_TIMEOUT,
     ) -> str:
         """Experimental version of `_communicate`"""
         assert self.container is not None
@@ -690,7 +692,7 @@ class SWEEnv(gym.Env):
     def _communicate(
         self,
         input: str,
-        timeout_duration: int | float = 25,
+        timeout_duration: int | float = AGENT_ACTION_TIMEOUT,
     ) -> str:
         """Runs command in container and returns output
 
@@ -741,7 +743,7 @@ class SWEEnv(gym.Env):
         output = self._communicate(f"/bin/bash -n <<'EOF'\n{input}\nEOF\n")
         return output, self.returncode == 0
 
-    def communicate(self, input: str, timeout_duration: int | float = 25, *, set_last_action: bool = False) -> str:
+    def communicate(self, input: str, timeout_duration: int | float = AGENT_ACTION_TIMEOUT, *, set_last_action: bool = False) -> str:
         """
         Sends input to container and returns output
 
@@ -777,7 +779,7 @@ class SWEEnv(gym.Env):
             self.communicate_output = ""
             return ""
 
-    def communicate_with_handling(self, input: str, error_msg: str, timeout_duration: int | float = 25) -> str:
+    def communicate_with_handling(self, input: str, error_msg: str, timeout_duration: int | float = AGENT_ACTION_TIMEOUT) -> str:
         """
         Wrapper for communicate function that raises error if return code is non-zero
 

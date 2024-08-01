@@ -3,7 +3,7 @@
 #   edit <start_line>:<end_line>
 #   <replacement_text>
 #   end_of_edit
-# docstring: replaces lines <start_line> through <end_line> (inclusive) with the given text in the open file. The replacement text is terminated by a line with only end_of_edit on it. All of the <replacement text> will be entered, so make sure your indentation is formatted properly. Python files will be checked for syntax errors after the edit. If the system detects a syntax error, the edit will not be executed. Simply try to edit the file again, but make sure to read the error message and modify the edit command you issue accordingly. Issuing the same command a second time will just lead to the same error message again.
+# docstring: replaces lines <start_line> through <end_line> (inclusive) with the given text in the open file. The replacement text is terminated by a line with only end_of_edit on it. All of the <replacement text> will be entered, so make sure your indentation is formatted properly. Python and Java files will be checked for syntax errors after the edit. If the system detects a syntax error, the edit will not be executed. Simply try to edit the file again, but make sure to read the error message and modify the edit command you issue accordingly. Issuing the same command a second time will just lead to the same error message again.
 # end_name: end_of_edit
 # arguments:
 #   start_line:
@@ -74,6 +74,8 @@ edit() {
     if [[ $CURRENT_FILE == *.py ]]; then
         _lint_output=$($linter_cmd "$CURRENT_FILE" 2>&1)
         lint_output=$(_split_string "$_lint_output" "$linter_before_edit" "$((start_line+1))" "$end_line" "$line_count")
+    elif [[ $CURRENT_FILE == *.java ]]; then
+        lint_output=$(_java_linting "$CURRENT_FILE" 2>&1)
     else
         # do nothing
         lint_output=""

@@ -5,8 +5,13 @@ ARG TARGETARCH
 # Install third party tools
 RUN apt-get update && \
     apt-get install -y bash gcc git jq wget g++ make && \
+    apt-get install -y openjdk-8-jdk maven && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Java environment variables
+ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Initialize git
 RUN git config --global user.email "sweagent@pnlp.org"
